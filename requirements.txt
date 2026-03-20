@@ -1,0 +1,5 @@
+flask>=2.3.0
+cryptography>=41.0.0
+requests>=2.31.0
+# Optional: pyqt5 (for desktop GUI)
+# pyqt5>=5.15.0

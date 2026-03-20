@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuMail – Quantum Secure Email</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <!-- Animated background blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">🔐</span>
+        <div>
+          <h1>QuMail</h1>
+          <p class="tagline">Quantum Secure Email Client · ETSI GS QKD 014</p>
+        </div>
+      </div>
+      <div class="km-status" id="kmStatus">
+        <span class="km-dot" id="kmDot"></span>
+        <span id="kmText">Key Manager</span>
+      </div>
+    </header>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+      <button class="tab active" onclick="showTab('send')">📤 Send Secure Email</button>
+      <button class="tab" onclick="showTab('decrypt')">🔓 Decrypt Email</button>
+      <button class="tab" onclick="showTab('inbox')">📥 Inbox</button>
+      <button class="tab" onclick="showTab('about')">ℹ️ About</button>
+    </div>
+
+    <!-- SEND TAB -->
+    <div id="tab-send" class="tab-content active">
+      <div class="card">
+        <h2 class="card-title">🛡️ Send Encrypted Email</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Gmail Address</label>
+            <input type="email" id="senderEmail" placeholder="you@gmail.com" />
+          </div>
+          <div class="form-group">
+            <label>Gmail App Password <a href="https://myaccount.google.com/apppasswords" target="_blank" class="help-link">?</a></label>
+            <input type="password" id="appPassword" placeholder="xxxx xxxx xxxx xxxx" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Recipient Email</label>
+          <input type="email" id="recipient" placeholder="recipient@example.com" />
+        </div>
+
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" id="subject" placeholder="Email subject..." />
+        </div>
+
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="message" rows="6" placeholder="Type your confidential message here..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Security Level</label>
+          <div class="security-grid">
+            <label class="security-option selected">
+              <input type="radio" name="secLevel" value="QUANTUM_AES" checked />
+              <span class="sec-icon">⚛️</span>
+              <span class="sec-name">QUANTUM AES</span>
+              <span class="sec-desc">AES-256-GCM + QKD</span>
+            </label>
+            <label class="security-option">
+              <input type="radio" name="secLevel" value="QUANTUM_OTP" />
+              <span class="sec-icon">🎲</span>
+              <span class="sec-name">QUANTUM OTP</span>
+              <span class="sec-desc">Perfect Secrecy</span>
+            </label>
+            <label class="security-option">
+              <input type="radio" name="secLevel" value="PQC" />
+              <span class="sec-icon">🔮</span>
+              <span class="sec-name">PQC</span>
+              <span class="sec-desc">Post-Quantum Crypto</span>
+            </label>
+            <label class="security-option">
+              <input type="radio" name="secLevel" value="NO_SECURITY" />
+              <span class="sec-icon">⚠️</span>
+              <span class="sec-name">NO SECURITY</span>
+              <span class="sec-desc">Testing Only</span>
+            </label>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="sendEmail()" id="sendBtn">
+          🚀 Send Secure Email
+        </button>
+      </div>
+
+      <!-- Result Panel -->
+      <div class="result-panel" id="resultPanel" style="display:none">
+        <div id="resultContent"></div>
+      </div>
+    </div>
+
+    <!-- DECRYPT TAB -->
+    <div id="tab-decrypt" class="tab-content">
+      <div class="card">
+        <h2 class="card-title">🔓 Decrypt Received Email</h2>
+        <div class="form-group">
+          <label>Paste Encrypted Email Body</label>
+          <textarea id="encryptedBody" rows="8" placeholder="Paste the full email body here (including --- QuMail Encrypted Message --- markers)..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Encryption Key (Hex)</label>
+          <input type="text" id="decryptKey" placeholder="64-character hex key from the sender's confirmation..." />
+        </div>
+        <button class="btn-primary" onclick="decryptEmail()">🔓 Decrypt Message</button>
+        <div class="result-panel" id="decryptResult" style="display:none">
+          <div id="decryptContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INBOX TAB -->
+    <div id="tab-inbox" class="tab-content">
+      <div class="card">
+        <h2 class="card-title">📥 Fetch Inbox</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Gmail Address</label>
+            <input type="email" id="inboxEmail" placeholder="you@gmail.com" />
+          </div>
+          <div class="form-group">
+            <label>App Password</label>
+            <input type="password" id="inboxPassword" placeholder="xxxx xxxx xxxx xxxx" />
+          </div>
+        </div>
+        <button class="btn-primary" onclick="fetchInbox()">📥 Fetch Emails</button>
+        <div id="inboxList" class="inbox-list"></div>
+      </div>
+    </div>
+
+    <!-- ABOUT TAB -->
+    <div id="tab-about" class="tab-content">
+      <div class="card">
+        <h2 class="card-title">ℹ️ About QuMail</h2>
+        <div class="about-grid">
+          <div class="about-item">
+            <h3>🛰️ Problem Statement</h3>
+            <p>SIH 2025 · ID 25179 · ISRO – Department of Space</p>
+            <p>Quantum-secure email against future quantum computer threats.</p>
+          </div>
+          <div class="about-item">
+            <h3>🔐 Encryption</h3>
+            <p><strong>QUANTUM_AES:</strong> AES-256-GCM with QKD-generated keys</p>
+            <p><strong>QUANTUM_OTP:</strong> One-Time Pad (perfect secrecy)</p>
+            <p><strong>PQC:</strong> Post-Quantum Cryptography (Kyber+AES hybrid)</p>
+          </div>
+          <div class="about-item">
+            <h3>🌐 Architecture</h3>
+            <p>Application-layer encryption before SMTP transmission.</p>
+            <p>No changes to existing email infrastructure required.</p>
+          </div>
+          <div class="about-item">
+            <h3>📋 ETSI GS QKD 014</h3>
+            <p>REST-based key delivery interface. 256-bit symmetric keys.</p>
+            <p>One-time key usage ensures perfect forward secrecy.</p>
+          </div>
+        </div>
+        <div class="km-info" id="kmInfo">Loading key manager status...</div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      Built with ❤️ for a quantum-secure future · SIH 2025 · QuMail v1.0
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
