@@ -1,6 +1,6 @@
 # QuMail - Secure Email System
 
-QuMail is a secure email system that uses AES-256-GCM encryption to protect messages.
+QuMail is a secure email system that uses AES-256-GCM encryption to protect messages
 
 **Features:**
 1. Secure Email Encryption
