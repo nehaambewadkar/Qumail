@@ -4,7 +4,7 @@ QuMail is a secure email system that uses AES-256-GCM encryption to protect mess
 
 **Features:**
 1. Secure Email Encryption
-2. AES-256-GCM Security
+2. AES-256-GCM Security.
 3. Flask Web Interface
 
 **How to Run:**
